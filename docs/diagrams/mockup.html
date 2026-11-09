@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><title>VulnLedger mockup</title>
+<style>
+body{margin:0;padding:24px;background:#fff;font:15px/1.4 "Comic Sans MS","Segoe Print",cursive;color:#222;width:1500px}
+h1{font-size:22px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.screen{border:2.5px solid #222;border-radius:10px;padding:0 0 14px;position:relative}
+.cap{font-weight:bold;margin:0 0 6px}
+.bar{border-bottom:2.5px solid #222;padding:8px 12px;display:flex;gap:18px;background:#eee;border-radius:8px 8px 0 0}
+.bar b{margin-right:10px}.bar .r{margin-left:auto}
+.in{padding:12px 14px}
+.box{border:2px solid #222;border-radius:6px;padding:8px 10px;margin:6px 0}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.tile{border:2px solid #222;border-radius:6px;padding:6px;text-align:center}
+.tile b{font-size:22px;display:block}
+.btn{display:inline-block;border:2px solid #222;border-radius:6px;padding:3px 12px;background:#ddd}
+.field{border:2px solid #222;border-radius:4px;height:26px;margin:4px 0 10px;padding:2px 8px;color:#777}
+table{width:100%;border-collapse:collapse}td,th{border-bottom:1.5px dashed #555;padding:5px 4px;text-align:left}
+.tag{border:2px solid #222;border-radius:12px;padding:0 8px;font-size:13px}
+.note{position:absolute;right:-10px;top:-14px;background:#fff7a8;border:1.5px solid #222;padding:2px 8px;font-size:13px;transform:rotate(2deg)}
+.squig{height:8px;background:#bbb;border-radius:4px;margin:7px 0}
+</style></head><body>
+<h1>VulnLedger — view mockup (rough sketch)</h1>
+<div class="grid">
+
+<div><p class="cap">1. Sign in</p><div class="screen"><span class="note">US-1, MS-1</span>
+<div class="bar"><b>VulnLedger</b></div>
+<div class="in" style="width:300px;margin:20px auto">
+<b>Sign in</b><br><br>Username<div class="field"></div>Password<div class="field">••••••••</div>
+<span class="btn">Sign in</span><p style="font-size:13px">(same error for bad user or bad password; lock after repeated failures)</p></div></div></div>
+
+<div><p class="cap">2. Dashboard</p><div class="screen"><span class="note">US-5, US-6</span>
+<div class="bar"><b>VulnLedger</b><span>Dashboard</span><span>Findings</span><span>Engagements</span><span class="r">alex · Sign out</span></div>
+<div class="in"><div class="row"><div class="tile"><b>6</b>Open</div><div class="tile"><b>1</b>Critical</div><div class="tile"><b>2</b>High</div><div class="tile"><b>2</b>Medium</div><div class="tile"><b>1</b>Low</div></div>
+<div class="row"><div class="box"><b>Overdue</b><table><tr><td>Root account has no MFA</td><td>Nov 4</td></tr><tr><td>S3 bucket public read</td><td>Nov 7</td></tr></table></div>
+<div class="box"><b>Assigned to me</b><div class="squig"></div><div class="squig" style="width:70%"></div><div class="squig" style="width:85%"></div></div></div>
+<div class="row"><div class="box"><b>By status</b><table><tr><td>Open</td><td>4</td></tr><tr><td>In progress</td><td>2</td></tr><tr><td>Remediated</td><td>1</td></tr></table></div>
+<div class="box"><b>Recent activity</b><div class="squig"></div><div class="squig" style="width:60%"></div><div class="squig" style="width:80%"></div></div></div></div></div></div>
+
+<div><p class="cap">3. Findings list</p><div class="screen"><span class="note">US-3, US-7, MS-4</span>
+<div class="bar"><b>VulnLedger</b><span>Dashboard</span><span>Findings</span><span>Engagements</span><span class="r">alex · Sign out</span></div>
+<div class="in"><div style="display:flex;justify-content:space-between"><b>Findings</b><span><span class="btn">Export CSV</span> <span class="btn">+ New finding</span></span></div>
+<div class="row" style="margin-top:8px"><div class="field">search…</div><div class="field">Severity ▾</div><div class="field">Status ▾</div><div class="field">Engagement ▾</div><div style="flex:.8">☐ mine <span class="btn">Filter</span></div></div>
+<table><tr><th>Severity</th><th>Finding</th><th>Asset</th><th>Ref</th><th>Status</th><th>Owner</th><th>Due</th></tr>
+<tr><td><span class="tag">Critical</span></td><td>Root account has no MFA</td><td>AWS root</td><td>CIS 1.5</td><td>Open</td><td>sam</td><td>Nov 4 !</td></tr>
+<tr><td><span class="tag">High</span></td><td>IAM users with admin access</td><td>IAM</td><td>PR.AC-4</td><td>In progress</td><td>sam</td><td>Nov 19</td></tr>
+<tr><td><span class="tag">High</span></td><td>S3 bucket allows public read</td><td>s3://…</td><td>A01:2021</td><td>Open</td><td>sam</td><td>Nov 7 !</td></tr>
+<tr><td><span class="tag">Medium</span></td><td>CloudTrail not in all regions</td><td>CloudTrail</td><td>CIS 3.1</td><td>Open</td><td>—</td><td>Nov 29</td></tr></table>
+<p style="text-align:center">‹ Prev · Page 1 of 2 · Next ›</p></div></div></div>
+
+<div><p class="cap">4. Finding detail + status update</p><div class="screen"><span class="note">US-4, US-8, MS-2, MS-3</span>
+<div class="bar"><b>VulnLedger</b><span>Dashboard</span><span>Findings</span><span>Engagements</span><span class="r">sam · Sign out</span></div>
+<div class="in"><div style="display:flex;justify-content:space-between"><b>Root account has no MFA</b><span class="btn">Edit (analyst only)</span></div>
+<div class="row"><div class="box" style="flex:2"><b>Description</b><div class="squig"></div><div class="squig" style="width:90%"></div><div class="squig" style="width:60%"></div><b>Recommended remediation</b><div class="squig"></div><div class="squig" style="width:75%"></div></div>
+<div class="box">Severity: <span class="tag">Critical</span><br>Status: Open<br>Asset: AWS root<br>Framework: CIS 1.5<br>Owner: sam<br>Due: Nov 4 (overdue)<br><br>Update status<div class="field">In progress ▾</div><div class="field">note…</div><span class="btn">Save status</span></div></div>
+<div class="box"><b>History</b> (append-only)<table><tr><td>Nov 9 15:40</td><td>sam · status changed · Open → In progress</td></tr><tr><td>Nov 2 09:12</td><td>alex · created</td></tr></table></div></div></div></div>
+
+<div style="grid-column:1/3"><p class="cap">5. New / edit finding (analyst)</p><div class="screen"><span class="note">US-2, US-3, MS-3</span>
+<div class="bar"><b>VulnLedger</b><span>Dashboard</span><span>Findings</span><span>Engagements</span><span class="r">alex · Sign out</span></div>
+<div class="in"><b>New finding</b><div class="row" style="margin-top:8px">
+<div>Engagement *<div class="field">Sample cloud assessment ▾</div>Title *<div class="field"></div>Description *<div class="field" style="height:70px"></div></div>
+<div>Affected asset<div class="field"></div>Severity *<div class="field">Medium ▾</div>Framework / Reference<div class="row"><div class="field">CIS Benchmark ▾</div><div class="field">CIS 1.4</div></div></div>
+<div>Recommended remediation<div class="field" style="height:50px"></div>Owner / Due date<div class="row"><div class="field">sam ▾</div><div class="field">mm/dd/yyyy</div></div><span class="btn">Save</span> Cancel</div></div></div></div></div>
+
+</div></body></html>

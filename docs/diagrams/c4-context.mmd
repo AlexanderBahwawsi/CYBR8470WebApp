@@ -1,0 +1,25 @@
+%% C4 Level 1 - System Context for VulnLedger
+flowchart TB
+    analyst["<b>Security Analyst</b><br/>[Person]<br/>Records findings from an assessment"]
+    owner["<b>Remediation Owner</b><br/>[Person]<br/>Fixes findings assigned to them"]
+    manager["<b>Manager</b><br/>[Person]<br/>Reviews risk posture and exports reports"]
+    attacker["<b>Malicious User</b><br/>[Person]<br/>Tries to read, alter or hide findings"]
+
+    vl["<b>VulnLedger</b><br/>[Software System]<br/>Tracks security findings from discovery to fix,<br/>mapped to CIS, NIST CSF, ATT&CK and OWASP"]
+
+    sheet["<b>Spreadsheet software</b><br/>[External System]<br/>Opens exported CSV reports"]
+
+    analyst -- "Records and edits findings<br/>[HTTPS]" --> vl
+    owner -- "Updates status of assigned findings<br/>[HTTPS]" --> vl
+    manager -- "Views dashboard, exports CSV<br/>[HTTPS]" --> vl
+    attacker -. "Attempts unauthorised access<br/>and injection [HTTPS]" .-> vl
+    vl -- "CSV export<br/>[file download]" --> sheet
+
+    classDef person fill:#08427b,stroke:#052e56,color:#fff
+    classDef system fill:#1168bd,stroke:#0b4884,color:#fff
+    classDef external fill:#8a8a8a,stroke:#5c5c5c,color:#fff
+    classDef threat fill:#8e1b1b,stroke:#5f1212,color:#fff
+    class analyst,owner,manager person
+    class vl system
+    class sheet external
+    class attacker threat

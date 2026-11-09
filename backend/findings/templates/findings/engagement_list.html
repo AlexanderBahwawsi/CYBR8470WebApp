@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Engagements · VulnLedger{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Engagements</h1>
+  {% if is_analyst %}<a class="button" href="{% url 'engagement-create' %}">New engagement</a>{% endif %}
+</div>
+<section class="card">
+{% if engagements %}
+<table>
+  <thead><tr><th>Name</th><th>Organization</th><th class="num">Findings</th><th class="num">Open</th></tr></thead>
+  <tbody>
+  {% for e in engagements %}
+    <tr>
+      <td><a href="{% url 'finding-list' %}?engagement={{ e.pk }}">{{ e.name }}</a></td>
+      <td>{{ e.organization }}</td>
+      <td class="num">{{ e.finding_count }}</td>
+      <td class="num">{{ e.open_count }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}<p class="muted">No engagements yet.</p>{% endif %}
+</section>
+{% endblock %}

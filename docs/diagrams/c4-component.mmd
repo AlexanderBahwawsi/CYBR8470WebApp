@@ -1,0 +1,44 @@
+%% C4 Level 3 - Components inside the Web Application container
+flowchart TB
+    browser["<b>Web UI</b><br/>[Container]"]
+    client["<b>API client</b><br/>[External]"]
+
+    subgraph web["Web Application [Container: Django]"]
+        mw["<b>Security middleware</b><br/>[Django middleware]<br/>Sessions, CSRF, clickjacking<br/>and transport headers"]
+        auth["<b>Authentication</b><br/>[django.contrib.auth]<br/>Login, logout, password hashing,<br/>users and role groups"]
+        views["<b>Page views</b><br/>[findings/views.py]<br/>Dashboard, list and filter,<br/>detail, create, edit, status change"]
+        api["<b>REST API</b><br/>[findings/api.py + serializers.py]<br/>/api/findings, /api/engagements"]
+        perms["<b>Role permissions</b><br/>[findings/permissions.py]<br/>Analyst, Owner, Manager rules"]
+        forms["<b>Forms and validation</b><br/>[findings/forms.py]<br/>Input validation and filters"]
+        export["<b>CSV export</b><br/>[views.export_csv]<br/>Neutralises formula injection"]
+        audit["<b>Audit recorder</b><br/>[findings/audit.py]<br/>Append-only change history"]
+        models["<b>Domain models</b><br/>[findings/models.py]<br/>Engagement, Finding, AuditEvent"]
+    end
+
+    db[("<b>Database</b><br/>[Container: PostgreSQL]")]
+
+    browser --> mw
+    client --> mw
+    mw --> auth
+    mw --> views
+    mw --> api
+    views --> perms
+    api --> perms
+    views --> forms
+    views --> export
+    export --> perms
+    views --> audit
+    api --> audit
+    export --> audit
+    forms --> models
+    api --> models
+    audit --> models
+    auth --> db
+    models -- "Django ORM" --> db
+
+    classDef container fill:#438dd5,stroke:#2e6295,color:#fff
+    classDef component fill:#85bbf0,stroke:#5d82a8,color:#000
+    classDef external fill:#8a8a8a,stroke:#5c5c5c,color:#fff
+    class browser,db container
+    class client external
+    class mw,auth,views,api,perms,forms,export,audit,models component

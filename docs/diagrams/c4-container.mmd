@@ -1,0 +1,22 @@
+%% C4 Level 2 - Containers inside VulnLedger
+flowchart TB
+    user["<b>Analyst / Owner / Manager</b><br/>[Person]"]
+    client["<b>API client</b><br/>[Script or future single-page UI]"]
+
+    subgraph vl["VulnLedger [Software System] - Docker Compose"]
+        browser["<b>Web UI</b><br/>[Container: HTML + CSS rendered by Django templates]<br/>Dashboard, findings list, detail and forms"]
+        web["<b>Web Application</b><br/>[Container: Python 3.12, Django 5, Django REST Framework]<br/>Authentication, role checks, finding workflow,<br/>REST API, CSV export, audit trail"]
+        db[("<b>Database</b><br/>[Container: PostgreSQL 16]<br/>Users, groups, engagements,<br/>findings, audit events")]
+    end
+
+    user -- "Uses<br/>[HTTPS]" --> browser
+    browser -- "Page requests and form posts<br/>[HTTPS, session cookie + CSRF token]" --> web
+    client -- "JSON requests to /api/<br/>[HTTPS, session auth]" --> web
+    web -- "Reads and writes<br/>[SQL over TCP 5432, Django ORM]" --> db
+
+    classDef person fill:#08427b,stroke:#052e56,color:#fff
+    classDef container fill:#438dd5,stroke:#2e6295,color:#fff
+    classDef external fill:#8a8a8a,stroke:#5c5c5c,color:#fff
+    class user person
+    class browser,web,db container
+    class client external

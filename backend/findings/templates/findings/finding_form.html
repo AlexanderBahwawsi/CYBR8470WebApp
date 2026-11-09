@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit{% else %}New{% endif %} finding · VulnLedger{% endblock %}
+{% block content %}
+<section class="card medium">
+  <h1>{% if object %}Edit finding{% else %}New finding{% endif %}</h1>
+  <form method="post" class="stack">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    <label>{{ field.label }}{% if field.field.required %} *{% endif %}
+      {{ field }}
+      {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+      {% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}
+    </label>
+    {% endfor %}
+    <div>
+      <button type="submit">Save</button>
+      <a href="{% if object %}{{ object.get_absolute_url }}{% else %}{% url 'finding-list' %}{% endif %}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

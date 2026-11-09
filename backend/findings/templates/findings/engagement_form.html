@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}New engagement · VulnLedger{% endblock %}
+{% block content %}
+<section class="card medium">
+  <h1>New engagement</h1>
+  <form method="post" class="stack">
+    {% csrf_token %}
+    {% for field in form %}
+    <label>{{ field.label }}{% if field.field.required %} *{% endif %}
+      {{ field }}
+      {% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}
+    </label>
+    {% endfor %}
+    <div><button type="submit">Save</button> <a href="{% url 'engagement-list' %}">Cancel</a></div>
+  </form>
+</section>
+{% endblock %}

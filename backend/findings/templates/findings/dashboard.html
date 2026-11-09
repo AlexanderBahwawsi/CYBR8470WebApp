@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · VulnLedger{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Dashboard</h1>
+  {% if is_analyst %}<a class="button" href="{% url 'finding-create' %}">New finding</a>{% endif %}
+</div>
+
+<section class="tiles">
+  <a class="tile" href="{% url 'finding-list' %}"><strong>{{ open_total }}</strong><span>Open findings</span></a>
+  {% for label, count, value in severity_rows %}
+  <a class="tile sev-{{ value }}" href="{% url 'finding-list' %}?severity={{ value }}">
+    <strong>{{ count }}</strong><span>Open {{ label|lower }}</span>
+  </a>
+  {% endfor %}
+</section>
+
+<div class="columns">
+  <section class="card">
+    <h2>Overdue</h2>
+    {% if overdue %}
+    <table>
+      <thead><tr><th>Finding</th><th>Owner</th><th>Due</th></tr></thead>
+      <tbody>
+      {% for f in overdue %}
+        <tr>
+          <td><a href="{{ f.get_absolute_url }}">{{ f.title }}</a></td>
+          <td>{{ f.owner.username|default:"Unassigned" }}</td>
+          <td class="overdue">{{ f.due_date|date:"M j" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="muted">Nothing is overdue.</p>{% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Assigned to me</h2>
+    {% if my_findings %}
+    <ul class="plain">
+      {% for f in my_findings %}
+      <li><span class="badge sev-{{ f.severity }}">{{ f.get_severity_display }}</span>
+          <a href="{{ f.get_absolute_url }}">{{ f.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">No open findings are assigned to you.</p>{% endif %}
+  </section>
+</div>
+
+<div class="columns">
+  <section class="card">
+    <h2>By status</h2>
+    <table>
+      <tbody>
+      {% for label, count in status_rows %}
+        <tr><td>{{ label }}</td><td class="num">{{ count }}</td></tr>
+      {% endfor %}
+        <tr class="total"><td>Total</td><td class="num">{{ total }}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Recent activity</h2>
+    {% if recent_events %}
+    <ul class="plain">
+      {% for e in recent_events %}
+      <li><span class="muted">{{ e.created_at|date:"M j, H:i" }}</span>
+        {{ e.actor.username }} · {{ e.get_action_display|lower }}
+        {% if e.finding %}<a href="{{ e.finding.get_absolute_url }}">{{ e.finding.title }}</a>{% endif %}
+        {% if e.detail %}<span class="muted">({{ e.detail }})</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">No activity yet.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

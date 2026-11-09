@@ -1,0 +1,32 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}VulnLedger{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{% url 'dashboard' %}">VulnLedger</a>
+    {% if user.is_authenticated %}
+    <nav>
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+      <a href="{% url 'finding-list' %}">Findings</a>
+      <a href="{% url 'engagement-list' %}">Engagements</a>
+    </nav>
+    <form class="logout" method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <span>{{ user.username }}</span>
+      <button type="submit" class="link">Sign out</button>
+    </form>
+    {% endif %}
+  </header>
+  <main>
+    {% for message in messages %}
+      <p class="flash {{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

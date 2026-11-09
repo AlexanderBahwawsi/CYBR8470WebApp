@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Findings · VulnLedger{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Findings</h1>
+  <div>
+    {% if can_export %}<a class="button secondary" href="{% url 'finding-export' %}?{{ querystring }}">Export CSV</a>{% endif %}
+    {% if is_analyst %}<a class="button" href="{% url 'finding-create' %}">New finding</a>{% endif %}
+  </div>
+</div>
+
+<form method="get" class="filters">
+  {{ filter_form.q }} {{ filter_form.severity }} {{ filter_form.status }} {{ filter_form.engagement }}
+  <label class="check">{{ filter_form.mine }} Assigned to me</label>
+  <button type="submit">Filter</button>
+  <a href="{% url 'finding-list' %}">Clear</a>
+</form>
+
+<section class="card">
+{% if findings %}
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Severity</th><th>Finding</th><th>Asset</th><th>Reference</th><th>Status</th><th>Owner</th><th>Due</th></tr>
+  </thead>
+  <tbody>
+  {% for f in findings %}
+    <tr>
+      <td><span class="badge sev-{{ f.severity }}">{{ f.get_severity_display }}</span></td>
+      <td><a href="{{ f.get_absolute_url }}">{{ f.title }}</a><br><span class="muted">{{ f.engagement.name }}</span></td>
+      <td>{{ f.affected_asset|default:"—" }}</td>
+      <td>{{ f.control_ref|default:"—" }}</td>
+      <td>{{ f.get_status_display }}</td>
+      <td>{{ f.owner.username|default:"Unassigned" }}</td>
+      <td {% if f.is_overdue %}class="overdue"{% endif %}>{{ f.due_date|date:"M j, Y"|default:"—" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% if is_paginated %}
+<p class="pager">
+  {% if page_obj.has_previous %}<a href="?{{ querystring }}&page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  {% if page_obj.has_next %}<a href="?{{ querystring }}&page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+</p>
+{% endif %}
+{% else %}
+<p class="muted">No findings match.</p>
+{% endif %}
+</section>
+{% endblock %}

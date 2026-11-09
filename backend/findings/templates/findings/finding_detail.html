@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ finding.title }} · VulnLedger{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="muted"><a href="{% url 'finding-list' %}">Findings</a> / {{ finding.engagement.name }}</p>
+    <h1>{{ finding.title }}</h1>
+  </div>
+  {% if can_edit %}<a class="button secondary" href="{% url 'finding-update' finding.pk %}">Edit</a>{% endif %}
+</div>
+
+<div class="columns wide-left">
+  <section class="card">
+    <h2>Description</h2>
+    <p>{{ finding.description|linebreaksbr }}</p>
+    <h2>Recommended remediation</h2>
+    <p>{{ finding.remediation|linebreaksbr|default:"Not written yet." }}</p>
+  </section>
+
+  <section class="card">
+    <dl>
+      <dt>Severity</dt><dd><span class="badge sev-{{ finding.severity }}">{{ finding.get_severity_display }}</span></dd>
+      <dt>Status</dt><dd>{{ finding.get_status_display }}</dd>
+      <dt>Affected asset</dt><dd>{{ finding.affected_asset|default:"—" }}</dd>
+      <dt>Framework</dt><dd>{{ finding.get_framework_display|default:"—" }} {{ finding.control_ref }}</dd>
+      <dt>Owner</dt><dd>{{ finding.owner.username|default:"Unassigned" }}</dd>
+      <dt>Due</dt><dd {% if finding.is_overdue %}class="overdue"{% endif %}>{{ finding.due_date|date:"M j, Y"|default:"—" }}{% if finding.is_overdue %} (overdue){% endif %}</dd>
+      <dt>Reported by</dt><dd>{{ finding.created_by.username }} on {{ finding.created_at|date:"M j, Y" }}</dd>
+    </dl>
+    {% if can_change_status %}
+    <form method="post" action="{% url 'finding-status' finding.pk %}" class="stack">
+      {% csrf_token %}
+      <label>Update status {{ status_form.status }}</label>
+      {{ status_form.note }}
+      <button type="submit">Save status</button>
+    </form>
+    {% endif %}
+  </section>
+</div>
+
+<section class="card">
+  <h2>History</h2>
+  {% if events %}
+  <ul class="plain">
+    {% for e in events %}
+    <li><span class="muted">{{ e.created_at|date:"M j, Y H:i" }}</span> {{ e.actor.username }} · {{ e.get_action_display|lower }}
+      {% if e.detail %}<span class="muted">— {{ e.detail }}</span>{% endif %}</li>
+    {% endfor %}
+  </ul>
+  {% else %}<p class="muted">No history yet.</p>{% endif %}
+</section>
+{% endblock %}
